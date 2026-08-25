@@ -1,0 +1,483 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design Tokens — macOS-inspired glass portfolio
+   ============================================================ */
+
+:root {
+  /* ── Color palette ── */
+  --color-bg-primary: hsl(225, 15%, 7%);
+  --color-bg-secondary: hsl(225, 14%, 10%);
+  --color-bg-tertiary: hsl(225, 12%, 14%);
+
+  --color-surface-glass: rgba(20, 20, 25, 0.5);
+  --color-surface-glass-hover: rgba(255, 255, 255, 0.10);
+  --color-surface-glass-active: rgba(255, 255, 255, 0.14);
+  --color-surface-elevated: rgba(255, 255, 255, 0.04);
+
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-medium: rgba(255, 255, 255, 0.15);
+  --color-border-strong: rgba(255, 255, 255, 0.25);
+
+  --color-text-primary: rgba(255, 255, 255, 0.98);
+  --color-text-secondary: rgba(255, 255, 255, 0.65);
+  --color-text-tertiary: rgba(255, 255, 255, 0.42);
+  --color-text-placeholder: rgba(255, 255, 255, 0.28);
+
+  /* ── Accent colors (macOS Ventura / Sonoma palette) ── */
+  --color-accent-blue: hsl(212, 100%, 50%);
+  --color-accent-blue-glow: hsla(212, 100%, 50%, 0.25);
+  --color-accent-purple: hsl(280, 80%, 60%);
+  --color-accent-green: hsl(145, 65%, 42%);
+  --color-accent-red: hsl(4, 90%, 58%);
+  --color-accent-orange: hsl(30, 100%, 50%);
+  --color-accent-yellow: hsl(45, 100%, 50%);
+
+  /* ── Traffic light colors ── */
+  --color-traffic-close: #FF5F57;
+  --color-traffic-minimize: #FEBD2F;
+  --color-traffic-maximize: #27C840;
+
+  /* ── Shadows (Multi-layered Sonoma-style) ── */
+  --shadow-window: 
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.35),
+    0 16px 40px rgba(0, 0, 0, 0.5),
+    0 40px 80px rgba(0, 0, 0, 0.45);
+
+  --shadow-window-focused:
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 24px 64px rgba(0, 0, 0, 0.65),
+    0 60px 120px rgba(0, 0, 0, 0.55);
+
+  --shadow-dock:
+    0 0 0 1px rgba(255, 255, 255, 0.15),
+    0 12px 48px rgba(0, 0, 0, 0.6),
+    0 36px 96px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+
+  --shadow-menu:
+    0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.7),
+    0 2px 12px rgba(0, 0, 0, 0.4);
+
+  --shadow-tooltip:
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.1);
+
+  /* ── Blur (Figma-inspected high-fidelity values) ── */
+  --blur-glass: 50px;
+  --blur-menu: 40px;
+  --blur-dock: 55px;
+
+  /* ── Border radii ── */
+  --radius-window: 14px;
+  --radius-dock: 20px;
+  --radius-menu: 10px;
+  --radius-button: 9px;
+  --radius-small: 7px;
+
+  /* ── Menu bar ── */
+  --menu-bar-height: 32px;
+
+  /* ── Dock ── */
+  --dock-icon-size: 52px;
+  --dock-icon-size-max: 72px;
+
+  /* ── Transitions ── */
+  --transition-fast: 100ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Font stack ── */
+  --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'SF Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-system);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Allow text selection in content areas */
+.selectable {
+  user-select: text;
+}
+
+/* ============================================================
+   Wallpaper
+   ============================================================ */
+
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  background-image: url('/wallpaper.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Launchpad open state blurs the wallpaper */
+.wallpaper.launchpad-active {
+  filter: blur(16px) brightness(0.7) saturate(1.2);
+}
+
+/* ── Boot Screen Animation ── */
+@keyframes boot-fade-in {
+  0% { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes boot-logo-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes boot-progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  animation: boot-fade-in 0.6s ease-out;
+}
+
+.boot-screen-logo {
+  animation: boot-logo-pulse 2s ease-in-out infinite;
+}
+
+.boot-progress-bar {
+  width: 200px;
+  height: 4px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.boot-progress-fill {
+  height: 100%;
+  background: rgba(255,255,255,0.85);
+  border-radius: 4px;
+  animation: boot-progress 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .wallpaper { animation: none; }
+}
+
+/* Subtle ambient light overlay for depth + darker lower gradient for legibility */
+@media (prefers-reduced-motion: no-preference) {
+  .wallpaper::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.42) 100%),
+      radial-gradient(ellipse at 30% 30%, hsla(212, 100%, 50%, 0.04) 0%, transparent 45%),
+      radial-gradient(ellipse at 75% 70%, hsla(280, 80%, 60%, 0.03) 0%, transparent 45%);
+    animation: wallpaper-breathe 24s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes wallpaper-breathe {
+  0% { opacity: 0.55; }
+  100% { opacity: 1; }
+}
+
+/* Improve header/menu-bar button hit targets, hover and focus visuals for better UX/accessibility */
+header[role="menubar"] button {
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background var(--transition-fast), transform var(--transition-fast), color var(--transition-fast);
+  color: var(--color-text-primary);
+}
+
+header[role="menubar"] button:hover {
+  background: rgba(255,255,255,0.06);
+  transform: translateY(-1px);
+}
+
+header[role="menubar"] button:active {
+  transform: translateY(0);
+}
+
+header[role="menubar"] button:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   Glass surfaces
+   ============================================================ */
+
+.glass {
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(var(--blur-glass)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(180%);
+  border: 0.5px solid var(--color-border-subtle);
+}
+
+.glass-menu {
+  background: rgba(22, 22, 26, 0.72);
+  backdrop-filter: blur(var(--blur-menu)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--blur-menu)) saturate(180%);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-dock {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(var(--blur-dock)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--blur-dock)) saturate(200%);
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+}
+
+/* ============================================================
+   Dock Bounce Animation
+   ============================================================ */
+
+@keyframes dock-bounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-16px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-8px); }
+}
+
+.animate-dock-bounce {
+  animation: dock-bounce 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1;
+}
+
+/* ============================================================
+   Window open animation
+   ============================================================ */
+
+@keyframes window-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.window-appear {
+  animation: window-appear 250ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================================
+   Focus ring — visible for keyboard navigation
+   ============================================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-small);
+}
+
+/* Remove focus for mouse/pointer */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   Mobile fallback
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Utility classes
+   ============================================================ */
+
+.absolute-fill {
+  position: absolute;
+  inset: 0;
+}
+
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Spotlight overlay backdrop
+   ============================================================ */
+
+.spotlight-backdrop {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+/* ============================================================
+   Launchpad overlay backdrop
+   ============================================================ */
+
+.launchpad-backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+}
+
+/* ============================================================
+   Liquid glass utility styles
+   
+   Adds a soft, layered frosted-glass with moving sheen to overlays
+   such as Launchpad and Spotlight. Works well combined with existing
+   backdrop-filter blur/saturate settings. The effect creates a
+   subtle directional highlight that slowly traverses the surface.
+   ============================================================ */
+
+.liquid-glass-backdrop {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  overflow: hidden;
+}
+
+.liquid-glass-backdrop::before,
+.liquid-glass-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Soft noise + micro-gradients for depth */
+.liquid-glass-backdrop::before {
+  background:
+    radial-gradient(1200px 600px at 10% 20%, rgba(255,255,255,0.028), transparent 12%),
+    radial-gradient(900px 500px at 85% 80%, rgba(255,255,255,0.02), transparent 12%),
+    linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.30) 100%);
+  mix-blend-mode: overlay;
+  opacity: 0.95;
+  transform: translateZ(0);
+}
+
+/* Animated sheen that drifts left-to-right */
+.liquid-glass-backdrop::after {
+  background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.12) 35%, rgba(255,255,255,0.02) 60%, rgba(255,255,255,0.00) 100%);
+  width: 160%;
+  left: -30%;
+  top: -10%;
+  bottom: -10%;
+  transform: skewX(-12deg);
+  filter: blur(18px) saturate(120%);
+  opacity: 0.6;
+  animation: liquid-sheen 9s linear infinite;
+}
+
+@keyframes liquid-sheen {
+  0% { transform: translateX(-30%) skewX(-12deg); opacity: 0.42; }
+  50% { transform: translateX(10%) skewX(-12deg); opacity: 0.7; }
+  100% { transform: translateX(60%) skewX(-12deg); opacity: 0.42; }
+}
+
+/* Surface variant for panels (cards) sitting on top of the backdrop */
+.liquid-glass-surface {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: var(--shadow-menu);
+  -webkit-backdrop-filter: blur(42px) saturate(180%);
+  backdrop-filter: blur(42px) saturate(180%);
+  overflow: hidden;
+}
+
+.liquid-glass-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Reduce motion respect */
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass-backdrop::after {
+    animation: none;
+  }
+}
